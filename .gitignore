@@ -1,0 +1,41 @@
+node_modules/
+dist/
+build/
+*.log
+.env
+.env.local
+.env.production
+
+# 存储文件
+storage/videos/*
+storage/screenshots/*
+storage/reports/*
+!storage/.gitkeep
+
+# 测试输出
+midscene_run/
+allure-results/
+playwright-report/
+test-results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# 临时文件
+tmp/
+temp/
+*.tmp

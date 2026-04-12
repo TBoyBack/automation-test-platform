@@ -1,0 +1,46 @@
+# Python 依赖 (Appium 引擎)
+# pip install -r requirements.txt
+
+# Appium
+Appium-Python-Client==3.1.0
+
+# Selenium (辅助)
+selenium==4.15.0
+
+# 测试框架
+pytest==7.4.3
+pytest-html==4.1.1
+pytest-allure-adapter==1.2.6
+
+# 异步任务
+rq==1.15.1
+
+# 数据库
+psycopg2-binary==2.9.9
+
+# Redis
+redis==5.0.1
+
+# 视频处理
+ffmpeg-python==0.2.0
+
+# 图像处理 (辅助)
+opencv-python-headless==4.8.1.78
+Pillow==10.1.0
+
+# HTTP 客户端
+requests==2.31.0
+httpx==0.25.1
+
+# 日志
+python-json-logger==2.0.7
+
+# 配置
+python-dotenv==1.0.0
+
+# 类型提示
+typing-extensions==4.8.0
+
+# 实用工具
+python-dateutil==2.8.2
+pytz==2023.3
