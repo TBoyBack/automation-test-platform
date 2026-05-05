@@ -61,33 +61,51 @@ midsceneTest('电商网站 - 搜索并筛选商品', async ({ page }) => {
   await agent.aiAssert('显示订单完成页面');
 });
 
-// ============ 测试用例 2: 社交媒体发帖流程 ============
+// ============ 测试用例 2: 本地社交媒体发帖流程 ============
 
-midsceneTest('社交媒体 - 发布图文帖子', async ({ page }) => {
+midsceneTest('社交媒体 - 本地模拟发布图文帖子', async ({ page }) => {
   const agent = new (await import('@midscene/web/playwright')).PlaywrightAgent(page);
 
-  // 1. 打开社交媒体网站（示例）
-  await page.goto('https://twitter.com');
-  
-  // 2. 点击发帖按钮
-  await agent.aiTap('发帖/编写新帖子按钮');
-  
-  // 3. 输入帖子内容
+  // 1. 使用本地模拟页面，避免默认测试对真实第三方账号产生副作用
+  await page.setContent(`
+    <main aria-label="本地社交媒体测试页面">
+      <h1>本地社交媒体测试页面</h1>
+      <label for="post-content">帖子输入框</label>
+      <textarea id="post-content" aria-label="帖子输入框"></textarea>
+      <button id="submit-post" type="button">提交到本地测试时间线</button>
+      <section aria-label="本地测试时间线">
+        <h2>本地测试时间线</h2>
+        <p id="publish-status" role="status"></p>
+        <ul id="timeline"></ul>
+      </section>
+    </main>
+    <script>
+      document.getElementById('submit-post').addEventListener('click', () => {
+        const value = document.getElementById('post-content').value;
+        const item = document.createElement('li');
+        item.textContent = value;
+        document.getElementById('timeline').prepend(item);
+        document.getElementById('publish-status').textContent = '帖子已发布到本地测试时间线';
+      });
+    </script>
+  `);
+
+  // 2. 输入帖子内容
   await agent.aiInput('帖子输入框', { 
     value: '这是一条使用 AI 自动化测试发布的推文！ #自动化测试 #AI' 
   });
   
-  // 4. 断言内容输入
+  // 3. 断言内容输入
   await agent.aiAssert('帖子输入框显示刚输入的内容');
   
-  // 5. 点击发布
-  await agent.aiTap('发布按钮');
+  // 4. 点击本地模拟提交按钮
+  await agent.aiTap('提交到本地测试时间线按钮');
   
-  // 6. 等待发布成功
-  await agent.aiWaitFor('帖子发布成功的提示');
+  // 5. 等待本地模拟发布成功
+  await agent.aiWaitFor('帖子已发布到本地测试时间线的提示');
   
-  // 7. 断言帖子已发布
-  await agent.aiAssert('新发布的帖子出现在时间线中');
+  // 6. 断言帖子已发布到本地模拟时间线
+  await agent.aiAssert('新发布的帖子出现在本地测试时间线中');
 });
 
 // ============ 测试用例 3: 表单填写与验证 ============
