@@ -208,6 +208,8 @@ router.post('/cases/:id/run', async (req, res) => {
       [caseResult.rows[0].suite_id, device_id]
     );
     
+    const executionId = executionResult.rows[0].id;
+
     // TODO: 将任务加入执行队列
     // const executor = require('../services/executor');
     // executor.submitJob(executionId, caseResult.rows[0], device_id);
@@ -215,7 +217,7 @@ router.post('/cases/:id/run', async (req, res) => {
     res.json({ 
       success: true, 
       message: '执行任务已创建',
-      data: { execution_id: executionResult.rows[0].id } 
+      data: { execution_id: executionId }
     });
   } catch (error) {
     console.error('执行用例失败:', error);
