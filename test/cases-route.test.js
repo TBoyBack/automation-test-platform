@@ -86,7 +86,7 @@ test('case creation lets PostgreSQL generate the SERIAL id', async () => {
 
   assert.equal(res.statusCode, 201);
   assert.equal(res.body.data.id, 42);
-  assert.doesNotMatch(queries[0].sql, /INSERT INTO test_case\s*\(\s*id\b/i);
+  assert.doesNotMatch(queries[0].sql, /INSERT INTO test_case\s*\([^)]*\bid\b/i);
   assert.deepEqual(queries[0].params, [
     7,
     'checkout flow',
@@ -123,7 +123,7 @@ test('case execution lets PostgreSQL generate and return the SERIAL execution id
   const insertExecution = queries.find((query) => /INSERT INTO test_execution/i.test(query.sql));
   assert.equal(res.statusCode, 200);
   assert.equal(res.body.data.execution_id, 99);
-  assert.doesNotMatch(insertExecution.sql, /INSERT INTO test_execution\s*\(\s*id\b/i);
+  assert.doesNotMatch(insertExecution.sql, /INSERT INTO test_execution\s*\([^)]*\bid\b/i);
   assert.match(insertExecution.sql, /RETURNING\s+id/i);
   assert.deepEqual(insertExecution.params, [3, 5]);
 });
