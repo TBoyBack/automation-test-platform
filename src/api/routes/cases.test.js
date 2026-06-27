@@ -45,6 +45,16 @@ function loadRouteWithModules(dbModule) {
       return { v4: () => 'generated-uuid' };
     }
 
+    if (request === 'pg') {
+      return {
+        Pool: class FakePool {
+          query() {
+            throw new Error('Unexpected database query in route load test');
+          }
+        },
+      };
+    }
+
     if (request === '../db' && parent?.filename === routePath && dbModule) {
       return dbModule;
     }
