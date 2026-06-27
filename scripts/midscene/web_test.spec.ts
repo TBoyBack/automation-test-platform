@@ -61,33 +61,24 @@ midsceneTest('电商网站 - 搜索并筛选商品', async ({ page }) => {
   await agent.aiAssert('显示订单完成页面');
 });
 
-// ============ 测试用例 2: 社交媒体发帖流程 ============
+// ============ 测试用例 2: 社交资料只读检查流程 ============
 
-midsceneTest('社交媒体 - 发布图文帖子', async ({ page }) => {
+midsceneTest('社交媒体 - 只读资料检查', async ({ page }) => {
   const agent = new (await import('@midscene/web/playwright')).PlaywrightAgent(page);
 
-  // 1. 打开社交媒体网站（示例）
-  await page.goto('https://twitter.com');
+  // 1. 打开静态示例页面，避免示例测试误操作真实社交账号
+  await page.goto('https://www.example.com');
   
-  // 2. 点击发帖按钮
-  await agent.aiTap('发帖/编写新帖子按钮');
+  // 2. 读取页面主要内容
+  const profileSummary = await agent.aiQuery(
+    '{ title: string, summary: string }',
+    '页面标题和主要说明文字'
+  );
   
-  // 3. 输入帖子内容
-  await agent.aiInput('帖子输入框', { 
-    value: '这是一条使用 AI 自动化测试发布的推文！ #自动化测试 #AI' 
-  });
+  console.log('只读页面摘要:', profileSummary);
   
-  // 4. 断言内容输入
-  await agent.aiAssert('帖子输入框显示刚输入的内容');
-  
-  // 5. 点击发布
-  await agent.aiTap('发布按钮');
-  
-  // 6. 等待发布成功
-  await agent.aiWaitFor('帖子发布成功的提示');
-  
-  // 7. 断言帖子已发布
-  await agent.aiAssert('新发布的帖子出现在时间线中');
+  // 3. 断言页面仍停留在只读内容展示状态
+  await agent.aiAssert('页面显示示例域名说明文字，没有登录、编辑或提交操作');
 });
 
 // ============ 测试用例 3: 表单填写与验证 ============
