@@ -66,28 +66,44 @@ midsceneTest('电商网站 - 搜索并筛选商品', async ({ page }) => {
 midsceneTest('社交媒体 - 发布图文帖子', async ({ page }) => {
   const agent = new (await import('@midscene/web/playwright')).PlaywrightAgent(page);
 
-  // 1. 打开社交媒体网站（示例）
-  await page.goto('https://twitter.com');
+  // 1. 使用本地页面模拟社交媒体发帖，避免对真实站点产生副作用
+  await page.setContent(`
+    <main>
+      <h1>测试社交动态</h1>
+      <button type="button" aria-label="发帖/编写新帖子按钮">新建帖子</button>
+      <label>
+        帖子输入框
+        <textarea aria-label="帖子输入框"></textarea>
+      </label>
+      <button type="button" aria-label="预览按钮" onclick="
+        document.querySelector('#timeline').textContent =
+          document.querySelector('textarea').value;
+        document.querySelector('#notice').textContent = '帖子预览成功';
+      ">预览</button>
+      <p id="notice" role="status"></p>
+      <section id="timeline" aria-label="本地时间线"></section>
+    </main>
+  `);
   
   // 2. 点击发帖按钮
   await agent.aiTap('发帖/编写新帖子按钮');
   
   // 3. 输入帖子内容
   await agent.aiInput('帖子输入框', { 
-    value: '这是一条使用 AI 自动化测试发布的推文！ #自动化测试 #AI' 
+    value: '这是一条仅在本地页面预览的自动化测试内容'
   });
   
   // 4. 断言内容输入
   await agent.aiAssert('帖子输入框显示刚输入的内容');
   
-  // 5. 点击发布
-  await agent.aiTap('发布按钮');
+  // 5. 点击预览
+  await agent.aiTap('预览按钮');
   
-  // 6. 等待发布成功
-  await agent.aiWaitFor('帖子发布成功的提示');
+  // 6. 等待预览成功
+  await agent.aiWaitFor('帖子预览成功的提示');
   
-  // 7. 断言帖子已发布
-  await agent.aiAssert('新发布的帖子出现在时间线中');
+  // 7. 断言内容只显示在本地页面中
+  await agent.aiAssert('本地时间线中显示新预览内容');
 });
 
 // ============ 测试用例 3: 表单填写与验证 ============
