@@ -4,7 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 test('default Midscene suite does not publish to real social media accounts', () => {
-  const specPath = path.join(__dirname, 'web_test.spec.ts');
+  const specPath = path.join(__dirname, '..', 'scripts', 'midscene', 'web_test.spec.ts');
   const source = readFileSync(specPath, 'utf8');
 
   assert.doesNotMatch(source, /https:\/\/(twitter|x)\.com/i);

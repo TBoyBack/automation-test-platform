@@ -127,5 +127,6 @@ test('POST /cases/:id/run lets PostgreSQL generate SERIAL execution ids', async 
     executionInsertCall.sql,
     /INSERT INTO test_execution\s*\(\s*id\b/i
   );
+  assert.match(executionInsertCall.sql, /RETURNING\s+id/i);
   assert.deepEqual(executionInsertCall.params, [7, 3]);
 });
