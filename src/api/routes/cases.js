@@ -215,7 +215,7 @@ router.post('/cases/:id/run', async (req, res) => {
     res.json({ 
       success: true, 
       message: '执行任务已创建',
-      data: { execution_id: executionResult.rows[0].id } 
+      data: { execution_id: executionResult.rows[0].id }
     });
   } catch (error) {
     console.error('执行用例失败:', error);
