@@ -86,10 +86,10 @@ midsceneTest('社交内容 - 创建草稿预览', async ({ page }) => {
       </section>
     </main>
   `);
-  
+
   // 1. 输入帖子内容
-  await agent.aiInput('帖子输入框', { 
-    value: '这是一条使用 AI 自动化测试创建的草稿！ #自动化测试 #AI' 
+  await agent.aiInput('帖子输入框', {
+    value: '这是一条使用 AI 自动化测试创建的草稿！ #自动化测试 #AI'
   });
   
   // 2. 断言内容输入
