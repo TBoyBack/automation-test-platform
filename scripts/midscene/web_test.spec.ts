@@ -61,33 +61,48 @@ midsceneTest('电商网站 - 搜索并筛选商品', async ({ page }) => {
   await agent.aiAssert('显示订单完成页面');
 });
 
-// ============ 测试用例 2: 社交媒体发帖流程 ============
+// ============ 测试用例 2: 社交内容草稿流程 ============
 
-midsceneTest('社交媒体 - 发布图文帖子', async ({ page }) => {
+midsceneTest('社交内容 - 创建草稿预览', async ({ page }) => {
   const agent = new (await import('@midscene/web/playwright')).PlaywrightAgent(page);
 
-  // 1. 打开社交媒体网站（示例）
-  await page.goto('https://twitter.com');
+  // 使用本地页面演示草稿编辑，避免对真实社交平台产生副作用。
+  await page.setContent(`
+    <main>
+      <h1>内容草稿箱</h1>
+      <label>
+        帖子输入框
+        <textarea aria-label="帖子输入框"></textarea>
+      </label>
+      <button type="button" onclick="
+        document.querySelector('[data-testid=draft-preview]').textContent =
+          document.querySelector('textarea').value;
+        document.querySelector('[role=status]').textContent = '草稿已保存';
+      ">保存草稿</button>
+      <p role="status"></p>
+      <section>
+        <h2>草稿预览</h2>
+        <p data-testid="draft-preview"></p>
+      </section>
+    </main>
+  `);
   
-  // 2. 点击发帖按钮
-  await agent.aiTap('发帖/编写新帖子按钮');
-  
-  // 3. 输入帖子内容
+  // 1. 输入帖子内容
   await agent.aiInput('帖子输入框', { 
-    value: '这是一条使用 AI 自动化测试发布的推文！ #自动化测试 #AI' 
+    value: '这是一条使用 AI 自动化测试创建的草稿！ #自动化测试 #AI' 
   });
   
-  // 4. 断言内容输入
+  // 2. 断言内容输入
   await agent.aiAssert('帖子输入框显示刚输入的内容');
   
-  // 5. 点击发布
-  await agent.aiTap('发布按钮');
+  // 3. 保存草稿
+  await agent.aiTap('保存草稿按钮');
   
-  // 6. 等待发布成功
-  await agent.aiWaitFor('帖子发布成功的提示');
+  // 4. 等待保存成功
+  await agent.aiWaitFor('草稿已保存的提示');
   
-  // 7. 断言帖子已发布
-  await agent.aiAssert('新发布的帖子出现在时间线中');
+  // 5. 断言草稿预览
+  await agent.aiAssert('草稿预览区域显示刚输入的内容');
 });
 
 // ============ 测试用例 3: 表单填写与验证 ============

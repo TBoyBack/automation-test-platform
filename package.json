@@ -10,7 +10,8 @@
     "build": "npm run build:web && npm run build:server",
     "build:server": "cd src/api && npm run build",
     "build:web": "cd src/web && npm run build",
-    "test": "npm run test:appium && npm run test:midscene",
+    "test": "npm run test:api && npm run test:appium && npm run test:midscene",
+    "test:api": "node --test src/api/routes/cases.test.js tests/midscene-web-spec.test.js",
     "test:appium": "python -m pytest scripts/appium/ -v",
     "test:midscene": "npx playwright test scripts/midscene/",
     "test:watch": "npx playwright test scripts/midscene/ --ui",
@@ -36,7 +37,6 @@
     "dotenv": "^16.3.1",
     "pg": "^8.11.3",
     "redis": "^4.6.10",
-    "uuid": "^9.0.1",
     "ws": "^8.14.2",
     "bull": "^4.11.4"
   },
