@@ -28,6 +28,12 @@ function makeAppWithDb(dbQuery) {
   return app;
 }
 
+function insertedColumns(sql, tableName) {
+  const match = sql.match(new RegExp(`INSERT\\s+INTO\\s+${tableName}\\s*\\(([^)]+)\\)`, 'i'));
+  assert.ok(match, `Expected INSERT column list for ${tableName}`);
+  return match[1].split(',').map((column) => column.trim().replace(/"/g, ''));
+}
+
 async function request(app, method, path, body) {
   const server = app.listen(0);
   await new Promise((resolve) => server.once('listening', resolve));
@@ -81,7 +87,7 @@ test('creating a case lets PostgreSQL generate the SERIAL id', async () => {
   assert.equal(response.body.data.id, 101);
   assert.equal(calls.length, 1);
   assert.match(calls[0].sql, /INSERT INTO test_case/i);
-  assert.doesNotMatch(calls[0].sql, /\(\s*id\s*,/i);
+  assert.equal(insertedColumns(calls[0].sql, 'test_case').includes('id'), false);
   assert.equal(calls[0].params.length, 6);
   assert.equal(calls[0].params[0], 7);
   assert.equal(calls[0].params[1], 'Checkout flow');
@@ -119,7 +125,7 @@ test('running a case lets PostgreSQL generate the execution SERIAL id', async ()
   assert.equal(response.status, 200);
   assert.equal(response.body.data.execution_id, 303);
   assert.ok(insertCall);
-  assert.doesNotMatch(insertCall.sql, /\(\s*id\s*,/i);
+  assert.equal(insertedColumns(insertCall.sql, 'test_execution').includes('id'), false);
   assert.match(insertCall.sql, /RETURNING id/i);
   assert.deepEqual(insertCall.params, [12, 5]);
 });
