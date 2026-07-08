@@ -1,0 +1,16 @@
+/**
+ * Shared PostgreSQL connection pool for API routes.
+ */
+
+const { Pool } = require('pg');
+require('dotenv').config();
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: parseInt(process.env.DATABASE_POOL_SIZE || '10', 10),
+});
+
+module.exports = {
+  query: (text, params) => pool.query(text, params),
+  pool,
+};
