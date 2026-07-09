@@ -63,9 +63,10 @@ midsceneTest('电商网站 - 搜索并筛选商品', async ({ page }) => {
 
 // ============ 测试用例 2: 社交媒体发帖流程 ============
 
-midsceneTest('社交媒体 - 发布图文帖子', async ({ page }) => {
+midsceneTest.skip('社交媒体 - 发布图文帖子', async ({ page }) => {
   const agent = new (await import('@midscene/web/playwright')).PlaywrightAgent(page);
 
+  // 该示例会修改真实第三方账号状态；仅应改造为 mock/staging 目标后再启用。
   // 1. 打开社交媒体网站（示例）
   await page.goto('https://twitter.com');
   
