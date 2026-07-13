@@ -83,10 +83,10 @@ midsceneTest('社交媒体 - 保存图文草稿', async ({ page }) => {
       });
     </script>
   `);
-  
+
   // 2. 输入帖子内容
-  await agent.aiInput('帖子输入框', { 
-    value: '这是一条使用 AI 自动化测试创建的草稿。 #自动化测试 #AI' 
+  await agent.aiInput('帖子输入框', {
+    value: '这是一条使用 AI 自动化测试创建的草稿。 #自动化测试 #AI'
   });
   
   // 3. 断言内容输入

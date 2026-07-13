@@ -212,10 +212,10 @@ router.post('/cases/:id/run', async (req, res) => {
     // const executor = require('../services/executor');
     // executor.submitJob(executionId, caseResult.rows[0], device_id);
     
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: '执行任务已创建',
-      data: { execution_id: executionResult.rows[0].id } 
+      data: { execution_id: executionResult.rows[0].id }
     });
   } catch (error) {
     console.error('执行用例失败:', error);
