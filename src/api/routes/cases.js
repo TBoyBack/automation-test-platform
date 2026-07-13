@@ -5,7 +5,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { v4: uuidv4 } = require('uuid');
 
 // ============ 用例管理 ============
 
@@ -106,12 +105,11 @@ router.post('/cases', async (req, res) => {
       });
     }
     
-    const id = uuidv4();
     const result = await db.query(
-      `INSERT INTO test_case (id, suite_id, name, description, type, content, created_by, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+      `INSERT INTO test_case (suite_id, name, description, type, content, created_by, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
        RETURNING *`,
-      [id, suite_id, name, description, type, JSON.stringify(content), req.user?.id || 'system']
+      [suite_id, name, description, type, content, req.user?.id || 'system']
     );
     
     res.status(201).json({ success: true, data: result.rows[0] });
@@ -139,7 +137,7 @@ router.put('/cases/:id', async (req, res) => {
            updated_at = NOW()
        WHERE id = $5
        RETURNING *`,
-      [name, description, type, content ? JSON.stringify(content) : null, id]
+      [name, description, type, content || null, id]
     );
     
     if (result.rows.length === 0) {
@@ -184,7 +182,7 @@ router.delete('/cases/:id', async (req, res) => {
 router.post('/cases/:id/run', async (req, res) => {
   try {
     const { id } = req.params;
-    const { device_id, params } = req.body;
+    const { device_id } = req.body;
     
     // 获取用例详情
     const caseResult = await db.query(
@@ -203,11 +201,11 @@ router.post('/cases/:id/run', async (req, res) => {
     );
     
     // 创执行记录
-    const executionId = uuidv4();
-    await db.query(
-      `INSERT INTO test_execution (id, suite_id, device_id, status, start_time, created_at)
-       VALUES ($1, $2, $3, 'pending', NOW(), NOW())`,
-      [executionId, caseResult.rows[0].suite_id, device_id]
+    const executionResult = await db.query(
+      `INSERT INTO test_execution (suite_id, device_id, status, start_time, created_at)
+       VALUES ($1, $2, 'pending', NOW(), NOW())
+       RETURNING id`,
+      [caseResult.rows[0].suite_id, device_id]
     );
     
     // TODO: 将任务加入执行队列
@@ -217,7 +215,7 @@ router.post('/cases/:id/run', async (req, res) => {
     res.json({ 
       success: true, 
       message: '执行任务已创建',
-      data: { execution_id: executionId } 
+      data: { execution_id: executionResult.rows[0].id } 
     });
   } catch (error) {
     console.error('执行用例失败:', error);
